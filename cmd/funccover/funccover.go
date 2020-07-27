@@ -20,9 +20,10 @@ import (
 	"crypto/sha256"
 	"flag"
 	"fmt"
-	"funccover/pkg/instrument"
 	"io/ioutil"
 	"os"
+
+	"github.com/muratekici/go-function-coverage/pkg/instrument"
 )
 
 const usageMessage = "" + `usage: funccover [instrumentation flags] [arguments...]:

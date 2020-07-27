@@ -1,4 +1,4 @@
-module funccover
+module github.com/muratekici/go-function-coverage
 
 go 1.14
 
