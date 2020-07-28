@@ -93,7 +93,7 @@ func addCounters(w io.Writer, content []byte, suffix string) {
 
 // writes the declaration of funcCover variable and necessery functions
 // to the end of the file using go templates
-func declCover(w io.Writer, suffix string, period time.Duration, out string, funcBlocks []FuncCoverBlock) {
+func declCover(w io.Writer, src, suffix, out string, period time.Duration, funcBlocks []FuncCoverBlock) {
 
 	funcTemplate, err := template.New("cover functions and variables").Parse(declTmpl)
 
@@ -108,13 +108,14 @@ func declCover(w io.Writer, suffix string, period time.Duration, out string, fun
 	}
 
 	var declParams = struct {
+		Src        string
 		Suffix     string
-		Period     string
 		Output     string
+		UsePeriod  int
+		Period     string
 		FuncCount  int
 		FuncBlocks []FuncCoverBlock
-		UsePeriod  int
-	}{suffix, fmt.Sprint(period), out, len(funcBlocks), funcBlocks, usePeriod}
+	}{src, suffix, out, usePeriod, fmt.Sprint(period), len(funcBlocks), funcBlocks}
 
 	err = funcTemplate.Execute(w, declParams)
 
@@ -124,7 +125,7 @@ func declCover(w io.Writer, suffix string, period time.Duration, out string, fun
 }
 
 // Annotate instruments given content (source code) with given parameters and writes it using w
-func Annotate(w io.Writer, content []byte, suffix string, period time.Duration, outputFile string) {
+func Annotate(w io.Writer, content []byte, src, suffix, outputFile string, period time.Duration) {
 
 	funcCover := SaveFuncs(content)
 
@@ -148,7 +149,7 @@ func Annotate(w io.Writer, content []byte, suffix string, period time.Duration, 
 	addCounters(w, content, suffix)
 
 	// Write necessary functions variables and an init function that calls periodical_retrieve_$hash() with w
-	declCover(w, suffix, period, outputFile, funcCover.FuncBlocks)
+	declCover(w, src, suffix, outputFile, period, funcCover.FuncBlocks)
 }
 
 var declTmpl = `
@@ -199,9 +200,9 @@ func retrieve_coverage_data_{{.Suffix}}() {
     	fd.Close()
 	}()
 
-	fmt.Fprintf(w, "collected function coverage data:\n")
+	fmt.Fprintf(w, "funccover: %s\n", "{{.Src}}")
 	
 	for i, count := range funcCover_{{.Suffix}}.Count {
-		fmt.Fprintf(w, "%d %s:%d\n", funcCover_{{.Suffix}}.Line[i], funcCover_{{.Suffix}}.Name[i], count)
+		fmt.Fprintf(w, "%s:%d:%d\n",funcCover_{{.Suffix}}.Name[i], funcCover_{{.Suffix}}.Line[i], count)
 	}   
 }`

@@ -43,8 +43,8 @@ func usage() {
 
 var (
 	funcCoverPeriod    = flag.Duration("period", 0, "period of the data collection ex.500ms\nif not given no periodical collection")
-	outputFile         = flag.String("out", "func_coverage.out", "file for funcCoverage output")
-	instrumentedSource = flag.String("instsrc", "instrumented_source.go", "file for instrumented source")
+	instrumentedSource = flag.String("dst", "", "file for instrumented source\nif not given instrumented_$source.go")
+	outputFile         = flag.String("o", "cover.out", "file for coverage output")
 )
 
 var functionCounter int
@@ -63,11 +63,16 @@ func main() {
 	err := parseFlags()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, `For usage information, run with no arguments and no flags`)
+		fmt.Fprintln(os.Stderr, `For usage information, run 'funccover' with no arguments and flags`)
 		os.Exit(2)
 	}
 
 	var src = flag.Args()[0]
+
+	if *instrumentedSource == "" {
+		*instrumentedSource = "instrumented_" + src
+	}
+
 	fd, err := os.Create(*instrumentedSource)
 	if err != nil {
 		panic(err)
@@ -91,7 +96,7 @@ func main() {
 	sum := sha256.Sum256([]byte(src))
 	uniqueHash = fmt.Sprintf("%x", sum[:6])
 
-	instrument.Annotate(w, content, uniqueHash, *funcCoverPeriod, *outputFile)
+	instrument.Annotate(w, content, src, uniqueHash, *outputFile, *funcCoverPeriod)
 }
 
 // parseFlags performs validations.
@@ -102,15 +107,11 @@ func parseFlags() error {
 	}
 
 	if *outputFile == *instrumentedSource {
-		return fmt.Errorf("coverage output file and instrumented source output can not be the same: %s", *instrumentedSource)
+		return fmt.Errorf("coverage output file and instrumented source file can not have the same name: %s", *instrumentedSource)
 	}
 
 	if *outputFile == "" {
 		return fmt.Errorf("output file name can not be empty")
-	}
-
-	if *instrumentedSource == "" {
-		return fmt.Errorf("instrumented source file name can not be empty")
 	}
 
 	if flag.NArg() == 0 {
