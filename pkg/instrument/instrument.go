@@ -135,8 +135,8 @@ func Annotate(w io.Writer, content []byte, suffix string, period time.Duration, 
 		panic(err)
 	}
 
-	// Ensure necessary imports are inserted to the ast
-	imports := []string{"time", "bufio", "os"}
+	// Ensure necessary imports are inserted
+	imports := []string{"bufio", "fmt", "os", "time"}
 	for _, impr := range imports {
 		astutil.AddImport(fset, parsedFile, impr)
 	}
