@@ -16,6 +16,7 @@ package instrument
 
 import (
 	"bytes"
+	"fmt"
 	"go/parser"
 	"go/token"
 	"testing"
@@ -44,7 +45,10 @@ func TestDeclCover(t *testing.T) {
 		if err != nil {
 			t.Errorf("could not parse the duration")
 		}
-		declCover(buf, sampleDecl[i].suffix, period, sampleDecl[i].out, sampleDecl[i].funcBlocks)
+		declCover(buf, "main.go", sampleDecl[i].suffix, sampleDecl[i].out, period, sampleDecl[i].funcBlocks)
+		fmt.Print("++++")
+		fmt.Print(buf)
+		fmt.Print("++++")
 		if string(sampleDecl[i].res) != buf.String() {
 			t.Errorf("decleration statements do not match %d", i)
 		}
@@ -102,10 +106,10 @@ func retrieve_coverage_data_100001() {
     	fd.Close()
 	}()
 
-	fmt.Fprintf(w, "collected function coverage data:\n")
+	fmt.Fprintf(w, "funccover: %s\n", "main.go")
 	
 	for i, count := range funcCover_100001.Count {
-		fmt.Fprintf(w, "%d %s:%d\n", funcCover_100001.Line[i], funcCover_100001.Name[i], count)
+		fmt.Fprintf(w, "%s:%d:%d\n",funcCover_100001.Name[i], funcCover_100001.Line[i], count)
 	}   
 }`)},
 	{"122340", "2s", "nope.txt", []FuncCoverBlock{
@@ -161,10 +165,10 @@ func retrieve_coverage_data_122340() {
     	fd.Close()
 	}()
 
-	fmt.Fprintf(w, "collected function coverage data:\n")
+	fmt.Fprintf(w, "funccover: %s\n", "main.go")
 	
 	for i, count := range funcCover_122340.Count {
-		fmt.Fprintf(w, "%d %s:%d\n", funcCover_122340.Line[i], funcCover_122340.Name[i], count)
+		fmt.Fprintf(w, "%s:%d:%d\n",funcCover_122340.Name[i], funcCover_122340.Line[i], count)
 	}   
 }`)},
 	{"", "0ns", "hello.txt", []FuncCoverBlock{}, []byte(`
@@ -193,10 +197,10 @@ func retrieve_coverage_data_() {
     	fd.Close()
 	}()
 
-	fmt.Fprintf(w, "collected function coverage data:\n")
+	fmt.Fprintf(w, "funccover: %s\n", "main.go")
 	
 	for i, count := range funcCover_.Count {
-		fmt.Fprintf(w, "%d %s:%d\n", funcCover_.Line[i], funcCover_.Name[i], count)
+		fmt.Fprintf(w, "%s:%d:%d\n",funcCover_.Name[i], funcCover_.Line[i], count)
 	}   
 }`)},
 }
