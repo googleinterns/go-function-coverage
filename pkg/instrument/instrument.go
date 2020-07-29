@@ -86,7 +86,7 @@ func addCounters(w io.Writer, content []byte, suffix string) {
 		if i == mainRbrace {
 			fmt.Fprintf(w, "\n\tdefer retrieve_coverage_data_%s()\n", suffix)
 		}
-		fmt.Fprintf(w, string(content[i]))
+		fmt.Fprintf(w, "%s", string(content[i]))
 	}
 
 }
@@ -137,7 +137,10 @@ func Annotate(w io.Writer, content []byte, src, suffix, outputFile string, perio
 	}
 
 	// Ensure necessary imports are inserted
-	imports := []string{"bufio", "fmt", "os", "time"}
+	imports := []string{"bufio", "fmt", "os"}
+	if period > 0 {
+		imports = append(imports, "time")
+	}
 	for _, impr := range imports {
 		astutil.AddImport(fset, parsedFile, impr)
 	}

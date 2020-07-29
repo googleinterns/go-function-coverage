@@ -16,7 +16,6 @@ package instrument
 
 import (
 	"bytes"
-	"fmt"
 	"go/parser"
 	"go/token"
 	"testing"
@@ -46,9 +45,6 @@ func TestDeclCover(t *testing.T) {
 			t.Errorf("could not parse the duration")
 		}
 		declCover(buf, "main.go", sampleDecl[i].suffix, sampleDecl[i].out, period, FuncCover{sampleDecl[i].funcBlocks})
-		fmt.Print("++++")
-		fmt.Print(buf)
-		fmt.Print("++++")
 		if string(sampleDecl[i].res) != buf.String() {
 			t.Errorf("decleration statements do not match %d", i)
 		}
@@ -212,15 +208,21 @@ var sampleCodes = []struct {
 }{
 	{[]byte(`package main
 
-func f1()	{}
+func f1(a, b int) int {
+	a %= b
+	return a
+}
 
 func main() {
 	f1()
 }
 `), "999829", []byte(`package main
 
-func f1()	{
-	funcCover_999829.Count[0] = 1;}
+func f1(a, b int) int {
+	funcCover_999829.Count[0] = 1;
+	a %= b
+	return a
+}
 
 func main() {
 	funcCover_999829.Count[1] = 1;
