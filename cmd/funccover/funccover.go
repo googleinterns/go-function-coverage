@@ -23,7 +23,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/muratekici/go-function-coverage/pkg/instrument"
+	"github.com/googleinterns/go-function-coverage/pkg/instrument"
 )
 
 const usageMessage = "" + `usage: funccover [instrumentation flags] [arguments...]:
