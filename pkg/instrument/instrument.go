@@ -93,7 +93,7 @@ func addCounters(w io.Writer, content []byte, suffix string) {
 
 // writes the declaration of funcCover variable and necessery functions
 // to the end of the file using go templates
-func declCover(w io.Writer, src, suffix, out string, period time.Duration, funcBlocks []FuncCoverBlock) {
+func declCover(w io.Writer, src, suffix, out string, period time.Duration, funcCover FuncCover) {
 
 	funcTemplate, err := template.New("cover functions and variables").Parse(declTmpl)
 
@@ -115,7 +115,7 @@ func declCover(w io.Writer, src, suffix, out string, period time.Duration, funcB
 		Period     string
 		FuncCount  int
 		FuncBlocks []FuncCoverBlock
-	}{src, suffix, out, usePeriod, fmt.Sprint(period), len(funcBlocks), funcBlocks}
+	}{src, suffix, out, usePeriod, fmt.Sprint(period), len(funcCover.FuncBlocks), funcCover.FuncBlocks}
 
 	err = funcTemplate.Execute(w, declParams)
 
@@ -149,7 +149,7 @@ func Annotate(w io.Writer, content []byte, src, suffix, outputFile string, perio
 	addCounters(w, content, suffix)
 
 	// Write necessary functions variables and an init function that calls periodical_retrieve_$hash() with w
-	declCover(w, src, suffix, outputFile, period, funcCover.FuncBlocks)
+	declCover(w, src, suffix, outputFile, period, funcCover)
 }
 
 var declTmpl = `
