@@ -45,7 +45,7 @@ func TestDeclCover(t *testing.T) {
 		if err != nil {
 			t.Errorf("could not parse the duration")
 		}
-		declCover(buf, "main.go", sampleDecl[i].suffix, sampleDecl[i].out, period, sampleDecl[i].funcBlocks)
+		declCover(buf, "main.go", sampleDecl[i].suffix, sampleDecl[i].out, period, FuncCover{sampleDecl[i].funcBlocks})
 		fmt.Print("++++")
 		fmt.Print(buf)
 		fmt.Print("++++")
