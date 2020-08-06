@@ -1,4 +1,4 @@
-module github.com/googleinterns/go-function-coverage
+module github.com/muratekici/go-function-coverage
 
 go 1.14
 
