@@ -54,7 +54,7 @@ Tool also inserts a defer call to the main to write coverage data after main fun
 
 ```bash
 # Get the module from Github and install it into your $GOPATH/bin/
-$ go get github.com/googleinterns/go-function-coverage/...
+$ go get github.com/muratekici/go-function-coverage/...
 ```
 - If you add your _$GOPATH/bin_ into your _$PATH_ ([instructions](
 https://github.com/golang/go/wiki/GOPATH)) you can run 'funccover' directly by writing 'funccover' to the terminal. 
@@ -62,34 +62,34 @@ https://github.com/golang/go/wiki/GOPATH)) you can run 'funccover' directly by w
 ## How To Use It
 
 ```bash
-$ funccover [flags] [arguments...]
+$ funccover [flags] [args...]
 ```
 
-Currently 'funccover' only works for single source files, you have to give the name of that file as an argument.  
+All sources given to funccover must be in the same package
 
 ### Flags
 
-'funccover' has 3 flags. Each flag tells 'funccover' how it should instrument the source code. 
+'funccover' has 3 flags. Each flag tells 'funccover' how and where it should instrument the source codes. 
 
 #### -period duration
 
-This flag represents the period of the data collection, if it is not given periodical collection will be disabled. 
+-period flag represents the period of the data collection, if it is not given periodical collection will be disabled. 
 
 ```bash
-$ funccover -period=500ms source.go
+$ funccover -period=500ms main.go oth.go
 ```
 
-#### -dst string
+#### -dir string
 
-This flag sets the destination file name for the instrumented source code (default "instrumented_$source.go").
+-dir flag sets the destination directory for the instrumented source codes (default ".\instrumented"), filenames will be the same.
 
 ```bash
-$ funccover -dst=instrumented_source.go source.go
+$ funccover -dir=instrumented_sources source1.go source2.go
 ```
 
 #### -o string
 
-This flag sets the coverage output file name (default "cover.out").
+-o flag sets the name of the coverage output file name (default "cover.out").
 
 ```bash
 $ funccover -period=1s -dst=instrumented.go -o=function_coverage.out source.go
@@ -97,22 +97,19 @@ $ funccover -period=1s -dst=instrumented.go -o=function_coverage.out source.go
 
 ### Example Usage
 
-You have a source file named src.go that should get 2 arguments to run normally. You want to get the function coverage data for it to a file named cover.txt and since it is a long running code you want to get the coverage data every 1 minutes.
+You have 2 source files named src.go and fun.go, both belongs to the same package. Normally binary runs with 2 arguments. You want to get the function coverage data for the binary to a file named cover.txt and since it is a long running code you want to get the coverage data every 1 minutes.
 
 ```bash
-$ funccover -period=1m -o=cover.txt src.go
-$ go build instrumented_src.go
-$ ./instrumented_src argument1 argument2
+$ funccover -period=1m -o=cover.txt src.go fun.go
+$ go build -o a ./instrumented/*.go
+$ ./instrumented/a argument1 argument2
 ```
 
 After you build the instrumented binary, you can run the binary normally (same way you run the binary for src.go) and coverage data will be written to cover.txt in following format:
 
 ```
-funccover: src.go
-name1:line1:coverage1
-name2:line2:coverage2
-name3:line3:coverage3
+path/to/original/source1:functionname1:line1:coverage1
+path/to/original/source2:functionname2:line2:coverage2
+path/to/original/source3:functionname3:line3:coverage3
 ...
 ```
-Here name is the name of the function. Line is the starting line number of the corresponding function. Lastly coverage is the coverage data for that function, **1** if it is called, **0** otherwise. 
-
