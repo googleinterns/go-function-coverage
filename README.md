@@ -81,7 +81,8 @@ $ funccover -period=500ms main.go oth.go
 
 #### -dir string
 
--dir flag sets the destination directory for the instrumented source codes (default ".\instrumented"), filenames will be the same.
+-dir flag sets the destination directory for the instrumented source codes , filenames will be the same.
+If not given it will write instrumented sources to stdout.
 
 ```bash
 $ funccover -dir=instrumented_sources source1.go source2.go
