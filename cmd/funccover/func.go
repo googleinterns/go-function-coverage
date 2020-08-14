@@ -12,7 +12,7 @@
 //See the License for the specific language governing permissions and
 //limitations under the License.
 
-package instrument
+package main
 
 import (
 	"go/ast"
@@ -32,29 +32,33 @@ type FuncCover struct {
 	FuncBlocks []FuncCoverBlock
 }
 
-// SaveFuncs parses given source code and returns a FuncCover instance
-func SaveFuncs(content []byte) FuncCover {
+// SaveFuncs parses given source code and returns a FuncCover instance, also returns true if main function is given
+func SaveFuncs(src string, content []byte) ([]FuncCoverBlock, bool, error) {
 
 	fset := token.NewFileSet()
 
 	parsedFile, err := parser.ParseFile(fset, "", content, parser.ParseComments)
 	if err != nil {
-		return FuncCover{}
+		return nil, false, err
 	}
 
-	var funcCover FuncCover
+	var funcBlocks []FuncCoverBlock
+	flag := false
 
 	// Find function declerations to instrument and save them to funcCover
 	for _, decl := range parsedFile.Decls {
 		switch t := decl.(type) {
 		// Function Decleration
 		case *ast.FuncDecl:
-			funcCover.FuncBlocks = append(funcCover.FuncBlocks, FuncCoverBlock{
-				Name: t.Name.Name,
+			if t.Name.Name == "main" {
+				flag = true
+			}
+			funcBlocks = append(funcBlocks, FuncCoverBlock{
+				Name: src + ":" + t.Name.Name,
 				Line: uint32(fset.Position(t.Pos()).Line),
 			})
 		}
 	}
 
-	return funcCover
+	return funcBlocks, flag, nil
 }
