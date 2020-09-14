@@ -55,7 +55,7 @@ This repository implements an example program and a handler to demonstrate the p
 
 ## Quickstart
 
-* Install our version of Bazel to your workspace: https://github.com/muratekici/bazel
+nstall our version of Bazel to your workspace: https://github.com/muratekici/bazel
 
 You can install it from source. Follow [this](https://docs.bazel.build/versions/master/install-compile-source.html) instructions. 
 
