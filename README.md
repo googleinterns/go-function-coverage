@@ -63,7 +63,7 @@ You can install it from source. Follow [this](https://docs.bazel.build/versions/
 
 * Build the example program with "func" coverage. You need to embed example handler to the binary target as well. 
 ```bash
-$ bazel build --collect_code_coverage --code_coverage_mode=func --embed_library=//packages/handler:example-handler //packages/program:example-program
+$ bazel build --collect_code_coverage --code_coverage_mode=func --embed_library=//packages/func-handler:example-handler //packages/program:example-program
 ```
 This will generate an executable ```bazel-bin/packages/program/example-program_/example-program```.
 When you run it, it will ask you to enter numbers in range [0-9] in a line, then it will call ```F$number``` function for each number you entered.
@@ -75,12 +75,12 @@ Coverage data will be saved to ```coverage.out```.
    * Handler library must implement a main package without the main() function
    * --embed_library option will embed this library to the go_binary target. 
    * It's init() function will start executing.
-   * Instrumentation inserts a call to LastCallForFunccoverReport function variable. You set it to run another function in init() function.
-   * Please take a look at the example handler, [Handler](../master/packages/handler/main.go)
+   * Instrumentation mode "func" inserts a call to LastCallForFunccoverReport function variable. You can set it to run another function in init() function.
+   * Please take a look at the example handlers for [func](../master/packages/func-handler/main.go) and for [set and count](../master/packages/handler/main.go).
    
-* To be able to use new coverage mode, you must load [modified rules_go repository](https://github.com/muratekici/rules_go) instead of official one in your WORKSPACE file. Please take look at the [WORKSPACE](../master/WORKSPACE) in this repository.
+* To be able to use new coverage mode and new options, you must load [modified rules_go repository](https://github.com/muratekici/rules_go) instead of official one in your WORKSPACE file. Please take look at the [WORKSPACE](../master/WORKSPACE) in this repository.
 
-* Build your program with your handler. 
+* Build your program with "func" coverage and your handler. 
 
 ```bash
 $ bazel build --collect_code_coverage --code_coverage_mode=func --embed_library=//:your_handler //:your-program
@@ -92,7 +92,7 @@ Go Function Coverage tool consists of 2 parts, instrumentation and a handler. To
 
 #### Instrumentation
 
-Our instrumentation is built inside the rules_go. To be able to use it you need to install updated bazel mentioned. You can set the coverage mode using new --code_coverage_mode option. 
+Our instrumentation is built inside the rules_go. To be able to use it you need to install updated bazel and rules. You can set the coverage mode using new --code_coverage_mode option. 
 
 Other existing modes are 
 
@@ -102,4 +102,4 @@ Other existing modes are
 
 #### Handler
 
-Handler is a package that implements reporting functionality. It will be [embedded](https://github.com/bazelbuild/rules_go/blob/master/go/core.rst#embedding) to the main package using new --embed_library option in build time. It's init() function will be invoked when program starts executing. You can call your go routines that will report the coverage data inside it. Coverage data will be saved inside the coverdata package during runtime. Please look at the [example](../master/packages/handler/) for more clarification. 
+Handler is a package that implements reporting functionality. It will be [embedded](https://github.com/bazelbuild/rules_go/blob/master/go/core.rst#embedding) to the main package using new --embed_library option in build time. Its init() function will be invoked when program starts executing. You can call your go routines that will report the coverage data inside it. Coverage data will be saved inside the coverdata package during runtime. Please look at the [examples](../master/packages/) for more clarification. 

@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "example-handler",
+    srcs = ["main.go"],
+    importpath = "example-library",
+    visibility = ["//visibility:public"],
+    deps = ["@io_bazel_rules_go//go/tools/coverdata"],
+)

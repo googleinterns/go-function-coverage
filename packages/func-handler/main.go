@@ -39,19 +39,16 @@ var collect func() = func() {
 		fd.Close()
 	}()
 
-	fmt.Fprintf(w, "cover mode: %s", coverdata.Cover.Mode)
-
-	for key, element := range coverdata.Cover.Blocks {
-		for i, block := range element {
-			fmt.Fprintf(w, "%s:%d:%d:%d:%d:%d:%d\n", key, block.Line0, block.Col0, block.Line1,
-				block.Col1, block.Stmts, coverdata.Cover.Counters[key][i])
-		}
+	for i := range coverdata.FuncCover.Flags {
+		fmt.Fprintf(w, "%s:%s:%d:%t\n", coverdata.FuncCover.SourcePaths[i],
+			coverdata.FuncCover.FunctionNames[i], coverdata.FuncCover.FunctionLines[i], *coverdata.FuncCover.Flags[i])
 	}
 }
 
 // Initializes the collection
 func init() {
 	fmt.Println("-- Coverage Collection is started --")
+	LastCallForFunccoverReport = &collect
 	initSignalHandler()
 	go periodicalCollect()
 }
