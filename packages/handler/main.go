@@ -37,7 +37,7 @@ var collect func() = func() {
 		fd.Close()
 	}()
 
-	for i, _ := range coverdata.FuncCover.Flags {
+	for i := range coverdata.FuncCover.Flags {
 		fmt.Fprintf(w, "%s:%s:%d:%t\n", coverdata.FuncCover.SourcePaths[i],
 			coverdata.FuncCover.FunctionNames[i], coverdata.FuncCover.FunctionLines[i], *coverdata.FuncCover.Flags[i])
 	}
