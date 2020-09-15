@@ -12,12 +12,27 @@
 //See the License for the specific language governing permissions and
 //limitations under the License.
 
-// Package covcollect implements a package to collect the function coverage data
+// Package functions implements a package to collect the function coverage data
 package functions
 
 import "fmt"
 
-func F6() { fmt.Println("F6 is executed") }
-func F7() { fmt.Println("F7 is executed") }
-func F8() { fmt.Println("F8 is executed") }
-func F9() { fmt.Println("F9 is executed") }
+// F6 prints "F6 is executed"
+func F6() {
+	fmt.Println("F6 is executed")
+}
+
+// F7 prints "F7 is executed"
+func F7() {
+	fmt.Println("F7 is executed")
+}
+
+// F8 prints "F8 is executed"
+func F8() {
+	fmt.Println("F8 is executed")
+}
+
+// F9 prints "F9 is executed"
+func F9() {
+	fmt.Println("F9 is executed")
+}
