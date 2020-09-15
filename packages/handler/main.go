@@ -26,24 +26,21 @@ import (
 
 // Function collect writes the data in coverdata to "coverage.out" file
 var collect func() = func() {
-
 	fd, err := os.Create("coverage.out")
 	if err != nil {
 		panic(err)
 	}
 
 	w := bufio.NewWriter(fd)
-
-	for i, _ := range coverdata.FuncCover.Flags {
-		fmt.Fprintf(w, "%s:%s:%d:%t\n", coverdata.FuncCover.SourcePaths[i],
-			coverdata.FuncCover.FunctionNames[i], coverdata.FuncCover.FunctionLines[i], *coverdata.FuncCover.Flags[i])
-	}
-
 	defer func() {
 		w.Flush()
 		fd.Close()
 	}()
 
+	for i, _ := range coverdata.FuncCover.Flags {
+		fmt.Fprintf(w, "%s:%s:%d:%t\n", coverdata.FuncCover.SourcePaths[i],
+			coverdata.FuncCover.FunctionNames[i], coverdata.FuncCover.FunctionLines[i], *coverdata.FuncCover.Flags[i])
+	}
 }
 
 // Initializes the collection
@@ -55,9 +52,7 @@ func init() {
 
 // Function periodicalCollect calls the collect function every 500ms
 func periodicalCollect() {
-
-	duration, _ := time.ParseDuration("500ms")
-
+	duration := 500 * time.Millisecond
 	ticker := time.NewTicker(duration)
 
 	for range ticker.C {
