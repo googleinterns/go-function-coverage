@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "functions",
-    srcs = ["func.go", "func_rest.go"],
+    srcs = [
+        "func.go",
+        "func_rest.go",
+    ],
     importpath = "functions",
     visibility = ["//visibility:public"],
 )
