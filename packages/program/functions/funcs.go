@@ -17,12 +17,12 @@ package functions
 
 import "fmt"
 
-// F0 print "F0" is executed
+// F0 prints "F0" is executed
 func F0() {
 	fmt.Println("F0 is executed")
 }
 
-// F1 prints "F0 is executed"
+// F1 printss"F0 is executed"
 func F1() {
 	fmt.Println("F1 is executed")
 }

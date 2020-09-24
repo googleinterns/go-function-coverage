@@ -26,7 +26,7 @@ import (
 	"github.com/bazelbuild/rules_go/go/tools/coverdata"
 )
 
-// Function collect writes the data in coverdata to "coverage.out" file
+// Writes the data in coverdata to "coverage.out" file
 var collect func() = func() {
 	fd, err := os.Create("coverage.out")
 	if err != nil {
@@ -39,16 +39,16 @@ var collect func() = func() {
 		fd.Close()
 	}()
 
-	for i := range coverdata.FuncCover.Flags {
-		fmt.Fprintf(w, "%s:%s:%d:%t\n", coverdata.FuncCover.SourcePaths[i],
-			coverdata.FuncCover.FunctionNames[i], coverdata.FuncCover.FunctionLines[i], *coverdata.FuncCover.Flags[i])
+	for i := range coverdata.FuncCoverData.Executed {
+		fmt.Fprintf(w, "%s:%s:%d:%t\n", coverdata.FuncCoverData.SourcePaths[i],
+			coverdata.FuncCoverData.FuncNames[i], coverdata.FuncCoverData.FuncLines[i], *coverdata.FuncCoverData.Executed[i])
 	}
 }
 
 // Initializes the collection
 func init() {
 	fmt.Println("-- Coverage Collection is started --")
-	LastCallForFunccoverReport = &collect
+	FuncCoverExitHook = &collect
 	initSignalHandler()
 	go periodicalCollect()
 }
@@ -66,7 +66,7 @@ func initSignalHandler() {
 
 // Function periodicalCollect calls the collect function every 500ms
 func periodicalCollect() {
-	duration := 500 * time.Millisecond
+	duration := 5000 * time.Millisecond
 	ticker := time.NewTicker(duration)
 
 	for range ticker.C {

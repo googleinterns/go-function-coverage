@@ -39,7 +39,7 @@ var collect func() = func() {
 		fd.Close()
 	}()
 
-	fmt.Fprintf(w, "cover mode: %s", coverdata.Cover.Mode)
+	fmt.Fprintf(w, "cover mode: %s\n", coverdata.Cover.Mode)
 
 	for key, element := range coverdata.Cover.Blocks {
 		for i, block := range element {
@@ -69,7 +69,7 @@ func initSignalHandler() {
 
 // Function periodicalCollect calls the collect function every 500ms
 func periodicalCollect() {
-	duration := 500 * time.Millisecond
+	duration := 5000 * time.Millisecond
 	ticker := time.NewTicker(duration)
 
 	for range ticker.C {
