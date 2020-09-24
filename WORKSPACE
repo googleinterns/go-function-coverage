@@ -4,7 +4,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "io_bazel_rules_go",
-    commit = "11ec19e2507107881919b41038a811076b75907f",
+    commit = "f11181780943dc9f8854cfdf03e7bf86179a1f18",
     remote = "https://github.com/muratekici/rules_go.git",
 )
 

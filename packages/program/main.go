@@ -17,7 +17,7 @@ package main
 
 import (
 	"fmt"
-	"functions"
+	"packages/program/functions"
 )
 
 func main() {
@@ -26,11 +26,11 @@ func main() {
 }
 
 func help() {
-	fmt.Println("This is an example program to test new coverage functionality for Bazel")
+	fmt.Println("This is an example program to test new coverage tool for Go")
 	fmt.Println("Please print an integer in range [0-9].")
-	fmt.Println("Program will call f$number function in the functions package.")
+	fmt.Println("Program will call F$number function in the functions package.")
 	fmt.Println("You can enter as many numbers you want.")
-	fmt.Println("Example handler will save the data to coverage.out file every 500ms and when the program exits.")
+	fmt.Println("Example handler will save the data to coverage.out file every 5 seconds and when the program exits.")
 	fmt.Println("Enter -1 to exit the program.")
 }
 
